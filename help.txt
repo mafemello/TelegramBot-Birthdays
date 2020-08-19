@@ -1,0 +1,6 @@
+Lista de possíveis comandos:
+
+/help - Exibe a lista de comandos
+/proximo - Exibe quando é o próximo aniversário
+/todos - Exibe todos os aniversários registrados
+/hoje - Indica se hoje tem ou não aniversário

@@ -6,7 +6,7 @@
 from generic_bot import GenericBot
 
 # Token provided by telegram
-TOKEN = 'XXXXXXXXXXXXXXXXXXXXX'
+TOKEN = 'XXXXXXXXXXXXXXXXXXXXXXXxxx'
 
 def main():
     bot = GenericBot(TOKEN) # creates bot
