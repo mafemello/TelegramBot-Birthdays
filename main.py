@@ -3,13 +3,13 @@
     Telegram bot to remember my friends' birthdays :)
 '''
 
-from generic_bot import GenericBot
+from bot import Bot
 
 # Token provided by telegram
-TOKEN = 'XXXXXXXXXXXXXXXXXXXXXXXxxx'
+TOKEN = 'xxxxxxxxxxxx'
 
 def main():
-    bot = GenericBot(TOKEN) # creates bot
+    bot = Bot(TOKEN) # creates bot
     bot.add_commands() # add commands
     bot.turn_on() 
     bot.turn_off()

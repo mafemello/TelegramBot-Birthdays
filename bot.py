@@ -13,13 +13,14 @@ from birthday_year import BirthdayYear
 import schedule
 import time
 
+
 # related to errors and exceptions
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 '''
     This class defines the bot behavior, and its answer to each command.
 '''
-class GenericBot:
+class Bot:
     def __init__(self,token):
         self.__token = token
         self.__updater = Updater(token=self.__token , use_context=True)
@@ -68,10 +69,11 @@ class GenericBot:
         This function must run daily so it can check if it is the day.
         /hoje
     '''
-    def _happy_birthday (self, update, context):
-        schedule.every().day.at("10:30").do(_happy_birthday)
+    def happy_birthday (self, update, context):
         hb = happyBirthday (context.args)
         context.bot.send_message(chat_id=update.effective_chat.id, text= hb.get_message())        
+        
+    schedule.every().day.at("10:30").do(happy_birthday)
 
     '''
         Cute keybord layout
@@ -100,7 +102,7 @@ class GenericBot:
         elif text == emojize(":calendar: Todos", use_aliases=True):
             self._all_birthdays(update, context)
         elif text == emojize(":birthday: Hoje", use_aliases=True):
-            self._happy_birthday(update, context)
+            self.happy_birthday(update, context)
         elif text == emojize(":information_source: Ajuda", use_aliases=True):
             self.__helpp(update, context)
         else:
@@ -113,7 +115,7 @@ class GenericBot:
         self.__dispatcher.add_handler(CommandHandler("start",self.__start))
         self.__dispatcher.add_handler(CommandHandler("proximo",self._next_birthday))
         self.__dispatcher.add_handler(CommandHandler("todos",self._all_birthdays))
-        self.__dispatcher.add_handler(CommandHandler("hoje",self._happy_birthday))
+        self.__dispatcher.add_handler(CommandHandler("hoje",self.happy_birthday))
         self.__dispatcher.add_handler(CommandHandler("help",self.__helpp))
         unknown_handler = MessageHandler(filters=Filters.text, callback=self.__handle_message)
         unknown_command = MessageHandler(filters=Filters.command,callback=self.__unknown)

@@ -20,7 +20,6 @@ class happyBirthday (AbstractAPI):
     def __init__(self, arguments):
         super().__init__(arguments)
 
-
     def get_message(self):
         creds = None
         # The file token.pickle stores the user's access and refresh tokens, and is created automatically when the authorization flow completes for the first time.
@@ -43,20 +42,21 @@ class happyBirthday (AbstractAPI):
 
         # Call the Calendar API         
         now = datetime.datetime.utcnow().isoformat() + 'Z' 
+
         
         # print ('do we have a birthday today?')
         events_result = service.events().list(calendarId='c_s879dbc19c4ngj9huqjghritu4@group.calendar.google.com',
-                                            singleEvents=True, maxResults=1, timeMin=now, 
+                                            singleEvents=True, maxResults=1, timeMin=now,
                                             orderBy='startTime').execute()
         events = events_result.get('items', [])
         a = True;
-        
+        print (events)
         if not events:
-            # print('no birthdays today :(')
+            return 'Não tem aniversário hoje :('
             a=False;
         
         for event in events:
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            print('Feliz aniversário,', event['summary'], ',que as arestas estejam com você!')
+            start = event['start'].get('dateTime', event['start'].get('date'))            
+            return 'Feliz aniversário,', event['summary'], ',que as arestas estejam com você!'  
 
 
