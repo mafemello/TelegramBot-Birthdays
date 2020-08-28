@@ -12,6 +12,7 @@ from next_birthday import nextBirthday
 from birthday_year import BirthdayYear
 import schedule
 import time
+from datetime import datetime
 
 
 # related to errors and exceptions
@@ -69,11 +70,18 @@ class Bot:
         This function must run daily so it can check if it is the day.
         /hoje
     '''
-    def happy_birthday (self, update, context):
+    # daily
+    def daily_job (self, update, job_queue):
+        t = datetime.time(23, 49, 40, 000000)
+        self.job_queue = JobQueue(self.bot)
+        job_queue.run_daily(notify_assignees, t, days=(0,1,2,3,4,5,6), context=update)
+        
+    
+    def happy_birthday (self, job):
         hb = happyBirthday (context.args)
         context.bot.send_message(chat_id=update.effective_chat.id, text= hb.get_message())        
-        
-    schedule.every().day.at("10:30").do(happy_birthday)
+
+
 
     '''
         Cute keybord layout

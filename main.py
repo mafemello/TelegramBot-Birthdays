@@ -6,7 +6,7 @@
 from bot import Bot
 
 # Token provided by telegram
-TOKEN = 'xxxxxxxxxxxx'
+TOKEN = '1315544482:AAEu-v3KfAAUy5ZgpjsEjS9i5RLX3IEXuhs'
 
 def main():
     bot = Bot(TOKEN) # creates bot
