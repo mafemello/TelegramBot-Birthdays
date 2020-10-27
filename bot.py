@@ -2,9 +2,9 @@ import logging
 import requests
 import json
 import datetime
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, JobQueue, Job
 from telegram import ReplyKeyboardMarkup, Contact
-from telegram.utils.helpers import to_float_timestamp  
+from telegram.utils.helpers import to_float_timestamp
 from emoji import emojize
 from bs4 import BeautifulSoup
 from happy_birthday import happyBirthday
@@ -12,7 +12,7 @@ from next_birthday import nextBirthday
 from birthday_year import BirthdayYear
 import schedule
 import time
-from datetime import datetime
+import datetime
 
 
 # related to errors and exceptions
@@ -31,7 +31,7 @@ class Bot:
         Behavior to the /help command.
     '''
     def __helpp(self,update, context):
-        context.bot.send_message(chat_id=update.effective_chat.id, text= self.__get_txt("help.txt"))  # sends a .txt 
+        context.bot.send_message(chat_id=update.effective_chat.id, text= self.__get_txt("help.txt"))  # sends a .txt
 
     '''
         /start command initializes the bot
@@ -50,7 +50,7 @@ class Bot:
 
 
     '''
-        Shows next birthday ==> done 
+        Shows next birthday ==> done
         /proximo
     '''
     def _next_birthday (self,update,context):
@@ -72,14 +72,16 @@ class Bot:
     '''
     # daily
     def daily_job (self, update, job_queue):
-        t = datetime.time(23, 49, 40, 000000)
-        self.job_queue = JobQueue(self.bot)
-        job_queue.run_daily(notify_assignees, t, days=(0,1,2,3,4,5,6), context=update)
-        
-    
+        print("daily_job")
+        t = datetime.time(16, 48, 0)
+        self.job_queue = JobQueue()
+        self.job_queue.run_daily(self.happy_birthday, t, days=(0,1,2,3,4,5,6), context=update)
+        print(self.job_queue.jobs())
+
+
     def happy_birthday (self, job):
-        hb = happyBirthday (context.args)
-        context.bot.send_message(chat_id=update.effective_chat.id, text= hb.get_message())        
+        hb = happyBirthday(context.args)
+        context.bot.send_message(chat_id=update.effective_chat.id, text= hb.get_message())
 
 
 
@@ -125,6 +127,7 @@ class Bot:
         self.__dispatcher.add_handler(CommandHandler("todos",self._all_birthdays))
         self.__dispatcher.add_handler(CommandHandler("hoje",self.happy_birthday))
         self.__dispatcher.add_handler(CommandHandler("help",self.__helpp))
+        self.__dispatcher.add_handler(CommandHandler("remember",self.daily_job, pass_job_queue=True))
         unknown_handler = MessageHandler(filters=Filters.text, callback=self.__handle_message)
         unknown_command = MessageHandler(filters=Filters.command,callback=self.__unknown)
         self.__dispatcher.add_handler(unknown_handler)
@@ -146,7 +149,7 @@ class Bot:
         self.__updater.start_polling()
         logging.info("### It's alive! ###")
 
-    
+
     def turn_off(self):
         self.__updater.idle()
         logging.info("### It's dead! ###")
